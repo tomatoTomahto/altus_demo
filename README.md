@@ -16,7 +16,7 @@ This demo uses:
 * [Altus Data Warehouse](https://www.cloudera.com/products/altus/altus-data-warehouse.html), a transient managed service for performing large-scale BI, reporting and ad-hoc analytics
 
 ## Demo Architecture
-The demo 
+![alt text](img/architecture.png "Demo Architecture")
 
 ## Demo Steps
 The demo uses [AWS](aws.amazon.com) as the underlying public cloud service. You 
@@ -27,10 +27,10 @@ will need an AWS account in order to run this demo.
 2. Create an Altus Environment on AWS using the [QuickStart Guide](https://www.cloudera.com/documentation/altus/topics/alt_env_setup_aws.html#env_wizard)
 3. Download this Github repository onto your desktop and upload the folder into an [S3 Bucket in AWS](https://docs.aws.amazon.com/AmazonS3/latest/user-guide/upload-objects.html). 
 
-### Step 2: Transform Some Data Using Altus Data Engineering
-During the setup, you uploaded some [sample customer data](GITHUB-data) into AWS S3. 
+### Step 2: Transform Data Using Altus Data Engineering
+During the setup, you uploaded some [sample customer data](https://github.com/tomatoTomahto/altus_demo/tree/master/data) into AWS S3. 
 In this step, we will run a transformation job on that data using Apache Spark. The 
-script that does the transformations is also in S3, but you can view it [here](GITHUB-script) 
+script that does the transformations is also in S3, but you can view it [here](https://github.com/tomatoTomahto/altus_demo/blob/master/scripts/customer_transformations.py) 
 for reference. 
 
 We will submit the Spark Job directly to Cloudera Altus, which will run the job on a 
@@ -38,9 +38,9 @@ transient Cloudera Spark compute cluster in AWS.
 
 1. In the Altus console, navigate to Data Engineering Jobs.
 2. Create a new PySpark job in Altus using the "customer_transformations.py" script you uploaded to S3
-[SCREENSHOT-create job]
+![alt text](img/create_job.png "Creating a Job")
 3. In the next page, create a new Cloudera cluster to run the transformation job. Make sure you uncheck the box that tells Altus to terminate the cluster once the job completes. We will be re-using the cluster Altus creates to run more jobs.
-[SCREENSHOT-create cluster]
+![alt text](img/create_cluster.png "Creating a Cluster")
 4. Once the job runs, click the Analytics tab to view all the metrics that Altus tracks for your jobs
   * How many stages did Spark use to run the job?
   * How long did the job take to run?
@@ -64,7 +64,7 @@ BI and analytics that's part of the Cloudera distribution.
 CREATE DATABASE telco;
 USE telco;
 
-CREATE EXTERNAL TABLE customers (
+CREATE EXTERNAL TABLE telco.customers (
     id                      INT,
     state                   STRING,
     area_code               STRING,
@@ -88,5 +88,11 @@ CREATE EXTERNAL TABLE customers (
     account_length          DOUBLE,
     churned                 BOOLEAN
 ) STORED AS PARQUET
-LOCATION 's3a://<data location>/customers';
+LOCATION 's3a://<bucket>/altus_demo/data/customers';
 ```
+3. Explore the data by running SQL queries against the ```telco.customers``` table to calculate the following:
+  * Top 5 states by number of existing customers
+  * Total Churn rate (churned/total)
+  * Churn rate by state
+  * Churn rate by total charge (day + evening + night)
+  * Churn rate by number of customer service calls
