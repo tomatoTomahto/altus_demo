@@ -42,14 +42,14 @@ transient Cloudera Spark compute cluster in AWS.
 3. In the next page, create a new Cloudera cluster to run the transformation job. Make sure you uncheck the box that tells Altus to terminate the cluster once the job completes. We will be re-using the cluster Altus creates to run more jobs.
 ![alt text](img/create_cluster.png "Creating a Cluster")
 4. Once the job runs, click the Analytics tab to view all the metrics that Altus tracks for your jobs
-  * How many stages did Spark use to run the job?
-  * How long did the job take to run?
-  * How much input data did the job process?
-  * How much output data did the job process?
+    * How many stages did Spark use to run the job?
+    * How long did the job take to run?
+    * How much input data did the job process?
+    * How much output data did the job process?
 5. Return to the Jobs pane and re-run the same job 4 times. You can do this by cloning the job and selecting the same cluster used previously. Make sure you keep the name of the job the same. 
 6. After 4 runs of an identical job, Altus will create a baseline run for that job. Subsequent runs will be compared to the baseline. 
-  * Make a duplicate of customer_info.csv and call it customer_info_dup.csv, and upload it to your data directory in S3
-  * Re-run the job a 5th time. How does this affect the job run compared to the baseline? What metrics have changed?
+    * Make a duplicate of customer_info.csv and call it customer_info_dup.csv, and upload it to your data directory in S3
+    * Re-run the job a 5th time. How does this affect the job run compared to the baseline? What metrics have changed?
 7. Navigate to Data Engineering Clusters and terminate your cluster
 
 ### Step 3: Analyze the Transformed Data Using Altus Data Warehouse
@@ -60,7 +60,7 @@ BI and analytics that's part of the Cloudera distribution.
 
 1. In the Altus console, navigate to Data Warehouse Clusters and create a new cluster.
 2. Once the cluster is created, open the SQL Editor and create a table on the data in S3:
-``` sql
+```
 CREATE DATABASE telco;
 USE telco;
 
@@ -88,11 +88,15 @@ CREATE EXTERNAL TABLE telco.customers (
     account_length          DOUBLE,
     churned                 BOOLEAN
 ) STORED AS PARQUET
-LOCATION 's3a://<bucket>/altus_demo/data/customers';
+LOCATION "s3a://<bucket>/altus_demo/data/customers";
 ```
+
 3. Explore the data by running SQL queries against the ```telco.customers``` table to calculate the following:
-  * Top 5 states by number of existing customers
-  * Total Churn rate (churned/total)
-  * Churn rate by state
-  * Churn rate by total charge (day + evening + night)
-  * Churn rate by number of customer service calls
+    * Top 5 states by number of existing customers
+    * Total Churn rate (churned/total)
+    * Churn rate by state
+    * Churn rate by total charge (day + evening + night)
+    * Churn rate by number of customer service calls
+  
+### (Optional) Step 4: Connect a BI Tool to your Data Warehouse
+Follow the instructions [here](https://www.cloudera.com/documentation/altus/topics/altdw_client_access.html) to connect a BI tool to your Altus Data Warehouse cluster, and create a simple report against the data in ```telco.customers```.
